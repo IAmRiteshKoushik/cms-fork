@@ -2,14 +2,22 @@
 import { Button } from './ui/button';
 import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 
 import { RefreshCw } from 'lucide-react';
 
 //@ts-ignore
 export function RefreshDb({ refreshDb, expand }) {
   const session = useSession();
+  const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
+    // Loading animation on the button when collapsed
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+
     // @ts-ignore
     const res = await refreshDb({ userId: session.data.user.id });
     if (res.error) {
@@ -33,7 +41,7 @@ export function RefreshDb({ refreshDb, expand }) {
       ) : (
         <div>
           <Button className="dark:text-white" onClick={handleClick}>
-            <RefreshCw />
+            <RefreshCw className={`${loading ? 'animate-spin' : ''}`} />
           </Button>
         </div>
       )}
